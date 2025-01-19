@@ -10,7 +10,12 @@ def initialise_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS dates (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            date INTEGER NOT NULL
+            year INTEGER NOT NULL,
+            month INTEGER NOT NULL,
+            day INTEGER NOT NULL,
+            hour INTEGER NOT NULL,
+            minute INTEGER NOT NULL,
+            second INTEGER NOT NULL
         )
     ''')
 
@@ -33,7 +38,13 @@ def initialise_db():
     check = cursor.fetchone()[0]
     if check == 0:
         for date in dates:
-            cursor.execute("INSERT INTO dates (date) VALUES (?)", (date,))
+            year = int(str(date)[:4])
+            month = int(str(date)[4:6])
+            day = int(str(date)[6:8])
+            hour = int(str(date)[8:10])
+            minute = int(str(date)[10:12])
+            second = int(str(date)[12:])
+            cursor.execute("INSERT INTO dates (year,month,day,hour,minute,second) VALUES (?,?,?,?,?,?)", (year,month,day,hour,minute,second,))
     connection.commit()
     connection.close()
 
@@ -66,7 +77,13 @@ def add_date():
         
         connection = sqlite3.connect('database.db')
         cursor = connection.cursor()
-        cursor.execute('INSERT INTO dates (date) VALUES (?)', (date_int,))
+        year = int(str(date_int)[:4])
+        month = int(str(date_int)[4:6])
+        day = int(str(date_int)[6:8])
+        hour = int(str(date_int)[8:10])
+        minute = int(str(date_int)[10:12])
+        second = int(str(date_int)[12:])
+        cursor.execute("INSERT INTO dates (year,month,day,hour,minute,second) VALUES (?,?,?,?,?,?)", (year,month,day,hour,minute,second,))
         connection.commit()
         connection.close()
 
@@ -90,14 +107,38 @@ def delete_date():
 def index():
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
-    dates_db = connection.execute("SELECT id, date from dates").fetchall()
-    just_dates = []
+    dates_db = connection.execute("SELECT * from dates").fetchall()
+    print(dates_db)
+    just_dates = [""]*(len(dates_db))
     just_id = []
+    i = 0
     for date in dates_db:
         just_id.append(date[0])
-        just_dates.append(date[1])
-    converted_dates = convert_dates_to_strings(just_dates)
-    sorted_dates = convert_dates_to_strings(radix_sort(just_dates))
+        just_dates[i]+=str(date[1])
+        if(date[2]<10):
+            just_dates[i]+="0"
+        just_dates[i]+=str(date[2])
+        if(date[3]<10):
+            just_dates[i]+="0"
+        just_dates[i]+=str(date[3])
+        if(date[4]<10):
+            just_dates[i]+="0"
+        just_dates[i]+=str(date[4])
+        if(date[5]<10):
+            just_dates[i]+="0"
+        just_dates[i]+=str(date[5])
+        if(date[6]<10):
+            just_dates[i]+="0"
+        just_dates[i]+=str(date[6])
+        i+=1
+    print(just_id)
+    print(just_dates)
+    just_dates_int = []
+    for date in just_dates:
+        just_dates_int.append(int(date))
+    print(just_dates_int)
+    converted_dates = convert_dates_to_strings(just_dates_int)
+    sorted_dates = convert_dates_to_strings(radix_sort(just_dates_int))
     return render_template('index.html', ids=just_id, dates=converted_dates, sorted_dates=sorted_dates)
 
 if __name__ == '__main__':
