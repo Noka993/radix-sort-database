@@ -15,7 +15,11 @@ def add_date():
     date_str = request.form['date']
     if not date_str:
         flash("No date provided!")
+        return redirect(url_for('index'))
     
+    if len(date_str) == 16:  # Format: "YYYY-MM-DDTHH:MM"
+        date_str += ":00"
+
     try:
         date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
 
