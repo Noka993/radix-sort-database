@@ -1,8 +1,28 @@
+<!DOCTYPE html>
 <html>
 
 <head>
   <title>Radix Sort</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+  <script>
+    function addDate() {
+        const date = document.getElementById('input').value;
+        if (date) {
+            form = document.getElementById("dateForm");
+            form.submit();
+        } else {
+            alert('Date not set!');
+        }
+    }
+
+    function setMax() {
+      const now = new Date();
+      const nowStr = now.toISOString();
+      const maxDate = nowStr.substring(0, 19);
+      document.getElementById('input').setAttribute('max', maxDate);
+    }
+    window.onload = setMax;
+  </script>
 </head>
 
 <body>
@@ -19,7 +39,7 @@
           <td class="date-container">
             {{ date }}
             <form action="/delete" method="post">
-              <input type="hidden" name="id" value="{{ id }}">
+              <input type="hidden" name="id" value="{{ ids[loop.index0] }}">
               <button type="submit" class="x">x</button>
             </form>
           </td>
@@ -46,19 +66,14 @@
     </div>
 
     <div class="form-container">
-      <form id="dateForm">
+      <form id="dateForm" method="POST" action="/add">
         <div class="date-input">
           <label for="datetime-local">Date:</label>
-          <input type="datetime-local">
-        </div>
-        <div class="date-input">
-          <label for="dateInput">Date:</label>
-          <input type="text" id="dateInput" name="date" placeholder="2025-01-01 12:00:00">
+          <input id="input" name="date" type="datetime-local" step="1">
         </div>
         <br><br>
         <div class="button-container">
           <button id="add" type="button" onclick="addDate()">Add to Table</button>
-          <button id="add" type="button" onclick="addDate()">Sort dates</button>
         </div>
       </form>
     </div>
