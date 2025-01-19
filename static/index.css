@@ -40,6 +40,7 @@ tr:nth-child(even) {
     min-width: 375px;
 }
 .table-container {
+    margin: 10px;
     max-height: 800px;
     overflow: auto;
     min-width: 375px;
