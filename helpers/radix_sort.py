@@ -8,6 +8,9 @@ def convert_dates_to_strings(dates):
     return formatted_dates
 
 def radix_sort(arr):
+    if not arr:
+        return []
+    
     max_digits = max([len(str(x)) for x in arr])
 
     base = 10
