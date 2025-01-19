@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-from helpers.radix_sort import convert_dates_to_strings, radix_sort
+from flask import Flask, render_template, request, redirect, url_for
+from helpers.radix_sort import convert_dates_to_strings, radix_sort # TODO database_functions
 
 app = Flask(__name__)
 
@@ -19,12 +19,26 @@ dates = [
     20230822102035,  # August 22, 2023, 10:20:35
 ]
 
+@app.route('/delete', methods=['GET', 'POST'])
+def delete():
+    if request.method == 'POST':
+        id = request.form['id']
+        return f'Deleted date with ID {id}'
+    return redirect(url_for('index'))
 
-@app.route('/')
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    if request.method == 'POST':
+        date = request.form['date']
+        dates.append(date)
+        # TODO add to database
+        
+    return redirect(url_for('index'))
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
     converted_dates = convert_dates_to_strings(dates)
     sorted_dates = convert_dates_to_strings(radix_sort(dates))
-    print(sorted_dates)
     return render_template('index.html', dates=converted_dates, sorted_dates=sorted_dates)
 
 if __name__ == '__main__':

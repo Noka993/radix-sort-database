@@ -19,7 +19,7 @@
           <td class="date-container">
             {{ date }}
             <form action="/delete" method="post">
-              <input type="hidden" name="id" value="{{ id }}">
+              <input type="hidden" name="id" value="{{ loop.index0 }}">
               <button type="submit" class="x">x</button>
             </form>
           </td>
