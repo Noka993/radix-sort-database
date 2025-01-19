@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, flash, render_template, request, redirect, url_for
 from helpers.radix_sort import convert_dates_to_strings, radix_sort
 import sqlite3
 from datetime import datetime
@@ -38,21 +38,42 @@ def initialise_db():
     connection.close()
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'
 
 initialise_db()
 
 @app.route('/add', methods=['POST'])
 def add_date():
-    date = request.form['date']
-    if date:
-        date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S')
-        date = date.strftime("%Y%m%d%H%M%S")
-        date = int(date)
+    date_str = request.form['date']
+    if not date_str:
+        flash("No date provided!")
+        return redirect(url_for('index'))
+    
+    try:
+        date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+
+        if date.year < 1000:
+            flash("Year must be at least 1000!")
+            return redirect(url_for('index'))
+        # Convert date to integer format YYYYMMDDhhmmss
+        date_int = int(date.strftime("%Y%m%d%H%M%S"))
+
+        # Ensure the date is not in the future
+        now_int = int(datetime.now().strftime("%Y%m%d%H%M%S"))
+        if date_int > now_int:
+            flash("You cannot add a future date!")
+            return redirect(url_for('index'))
+        
         connection = sqlite3.connect('database.db')
         cursor = connection.cursor()
-        cursor.execute('INSERT INTO dates (date) VALUES (?)', (date,))
+        cursor.execute('INSERT INTO dates (date) VALUES (?)', (date_int,))
         connection.commit()
         connection.close()
+
+    except ValueError:
+        flash("Invalid date format!")
+        return redirect(url_for('index'))
+
     return redirect(url_for('index'))
 
 @app.route('/delete', methods=['POST'])

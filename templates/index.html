@@ -6,13 +6,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
   <script>
     function addDate() {
-        const date = document.getElementById('input').value;
-        if (date) {
-            form = document.getElementById("dateForm");
-            form.submit();
-        } else {
-            alert('Date not set!');
-        }
+      form = document.getElementById("dateForm");
+      form.submit();
     }
 
     function setMax() {
@@ -71,7 +66,15 @@
           <label for="datetime-local">Date:</label>
           <input id="input" name="date" type="datetime-local" step="1">
         </div>
-        <br><br>
+        <br>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <br>
         <div class="button-container">
           <button id="add" type="button" onclick="addDate()">Add to Table</button>
         </div>
