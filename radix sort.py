@@ -12,12 +12,13 @@ def convert_dates_to_strings(dates):
         day = int(date_str[6:8])
         hour = int(date_str[8:10])
         minute = int(date_str[10:12])
-        
+        second = int(date_str[12:])
+
         # Create a datetime object
-        dt = datetime(year, month, day, hour, minute)
+        dt = datetime(year, month, day, hour, minute, second)
         
         # Format the datetime object into a readable string
-        formatted_date = dt.strftime("%B %d, %Y, %H:%M")
+        formatted_date = dt.strftime("%Y, %B %d, %H:%M:%S")
         formatted_dates.append(formatted_date)
     
     return formatted_dates
@@ -47,18 +48,19 @@ def radix_sort(arr):
 
 
 dates = [
-    202501161845,  # January 16, 2025, 18:45
-    202312251230,  # December 25, 2023, 12:30
-    202411081500,  # November 8, 2024, 15:00
-    202510300715,  # October 30, 2025, 07:15
-    202604012259,  # April 1, 2026, 22:59
-    202308221030,  # August 22, 2023, 10:30
-    202707040000,  # July 4, 2027, 00:00
-    202510311200,  # October 31, 2025, 12:00
-    202402290830,  # February 29, 2024 (leap year), 08:30
-    202512311159,   # December 31, 2025, 11:59
-    202308221045,  # August 22, 2023, 10:45
-    202308221020,  # August 22, 2023, 10:20
+    20250116184534,  # January 16, 2025, 18:45:34
+    20231225123032,  # December 25, 2023, 12:30:32
+    20241108150034,  # November 8, 2024, 15:00:34
+    20251030071532,  # October 30, 2025, 07:15:32
+    20260401225934,  # April 1, 2026, 22:59:34
+    20230822103012,  # August 22, 2023, 10:30:12
+    20270704000000,  # July 4, 2027, 00:00:00
+    20251031120059,  # October 31, 2025, 12:00:59
+    20240229083052,  # February 29, 2024 (leap year), 08:30:52
+    20240229083032,  # February 29, 2024 (leap year), 08:30:32
+    20251231115954,   # December 31, 2025, 11:59:54
+    20230822104545,  # August 22, 2023, 10:45:45
+    20230822102034,  # August 22, 2023, 10:20:34
 ]
 
 dates = convert_dates_to_strings(radix_sort(dates))
