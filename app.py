@@ -65,7 +65,7 @@ def delete_date():
     connection.close()
     return redirect(url_for('index'))
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
